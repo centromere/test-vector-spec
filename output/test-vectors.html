@@ -1,0 +1,192 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <meta name="author" content="Alex Wied (alex@centromere.net)" />
+  <meta name="author" content="Rhys Weatherley (rhys.weatherley@gmail.com)" />
+  <meta name="date" content="2017-11-21" />
+  <title>Noise Test Vector Format</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  </style>
+  <link rel="stylesheet" href="spec_markdown.css" type="text/css" />
+</head>
+<body>
+<div id="header">
+<h1 class="title">Noise Test Vector Format</h1>
+<b>Author:</b> Alex Wied (alex@centromere.net)<br/>
+<b>Author:</b> Rhys Weatherley (rhys.weatherley@gmail.com)<br/>
+<b>Revision:</b> 1<br/>
+<b>Date:</b> 2017-11-21<br/>
+<b>Status:</b> unofficial/unstable<br/>
+<b>PDF:</b> <a href="test-vectors.pdf">test-vectors.pdf</a><br/>
+</div>
+<div id="TOC">
+<h2 class="toc">Table of Contents</h2>
+<ul>
+<li><a href="#introduction">1. Introduction</a></li>
+<li><a href="#overview">2. Overview</a></li>
+<li><a href="#format">3. Format</a></li>
+<li><a href="#semantics">4. Semantics</a><ul>
+<li><a href="#noise-pipes">4.1. Noise Pipes</a></li>
+</ul></li>
+<li><a href="#example">5. Example</a></li>
+<li><a href="#ipr">6. IPR</a></li>
+<li><a href="#references">7. References</a></li>
+</ul>
+</div>
+<h1 id="introduction">1. Introduction</h1>
+<p>The purpose of this document is to specify the format and semantics of test vectors for Noise.</p>
+<h1 id="overview">2. Overview</h1>
+<p>Test vectors are represented as JSON but with an extra set of restrictions. The rationale for this is:</p>
+<ul>
+<li>Some embedded systems may not have JSON tools available.</li>
+<li>It is more human readable.</li>
+</ul>
+<p>More details about the rationale can be found on the mailing list<span class="citation">[<a href="#ref-vectorrationale">1</a>]</span>.</p>
+<h1 id="format">3. Format</h1>
+<p>Vectors are valid JSON and must be formatted exactly as follows:</p>
+<pre><code>{
+&quot;vectors&quot;: [
+{
+&quot;name&quot;: &quot;&lt;free form description of handshake&gt;&quot;,
+&quot;protocol_name&quot;: &quot;&lt;any valid handshake pattern name&gt;&quot;,
+&quot;fail&quot;: false|true,
+&quot;fallback&quot;: false|true,
+&quot;fallback_pattern&quot;: &quot;&lt;any valid handshake pattern name&gt;&quot;,
+&quot;init_prologue&quot;: &quot;hex string&quot;,
+&quot;init_psks&quot;: [&quot;hex string&quot;, ...]
+&quot;init_static&quot;: &quot;hex string&quot;,
+&quot;init_ephemeral&quot;: &quot;hex string&quot;,
+&quot;init_remote_static&quot;: &quot;hex string&quot;,
+&quot;resp_prologue&quot;: &quot;hex string&quot;,
+&quot;resp_psks&quot;: [&quot;hex string&quot;, ...]
+&quot;resp_static&quot;: &quot;hex string&quot;,
+&quot;resp_ephemeral&quot;: &quot;hex string&quot;,
+&quot;resp_remote_static&quot;: &quot;hex string&quot;,
+&quot;handshake_hash&quot;: &quot;hex string&quot;,
+&quot;messages&quot;: [
+{
+&quot;payload&quot;: &quot;hex string&quot;,
+&quot;ciphertext&quot;: &quot;hex string&quot;
+}, ...
+]
+}, ...
+]
+}</code></pre>
+<h1 id="semantics">4. Semantics</h1>
+<p>The following keys are optional:</p>
+<ul>
+<li><code>name</code></li>
+<li><code>fail</code></li>
+<li><code>init_*</code> and <code>resp_*</code> (<em>except</em> the prologues)</li>
+<li><code>handshake_hash</code></li>
+<li><code>fallback</code> (used for testing Noise Pipes, described below, defaults to <code>false</code>)</li>
+<li><code>fallback_pattern</code></li>
+</ul>
+<p>Optional keys may be <code>null</code> or omitted entirely. The <code>fail</code> key, if omitted, defaults to <code>false</code> The <code>name</code> key, if omitted, defaults to <code>protocol_name</code>. The <code>init_psks</code> and <code>resp_psks</code> keys default to an empty list if omitted. All other keys are mandatory.</p>
+<p>PSKs are applied to the handshake in the same order specified in the vector.</p>
+<p>The <code>handshake_hash</code> key specifies the expected handshake hash value for both parties at the end of a successful handshake. If <code>fail</code> is <code>true</code> and the failure occurs before the handshake is complete, then the <code>handshake_hash</code> value must be ignored.</p>
+<p>The <code>messages</code> array describes a conversation alternating between the initiator and responder, starting with the initiator. No distinction is made between when the handshake begins and when it is complete. For example, if a handshake pattern has three messages in it, the responder will send the first non-handshake Noise message. For one-way patterns the messages simply flow from the initiator to the responder.</p>
+<h2 id="noise-pipes">4.1. Noise Pipes</h2>
+<p>There are three main scenarios to test for Noise Pipes: <code>XX</code> for a &quot;full handshake&quot;, <code>IK</code> with a successful response for an &quot;abbreviated handshake&quot;, and <code>IK</code> followed by <code>XXfallback</code> for a &quot;fallback handshake&quot;.</p>
+<p>The &quot;full handshake&quot; and successful &quot;abbreviated handshake&quot; cases are tested in the same way as before because they are normal <code>XX</code> and <code>IK</code> handshake patterns.</p>
+<p>The &quot;fallback handshake&quot; case requires some special handling by the test runner to deal with the transition from <code>IK</code> to <code>XXfallback</code>. This special handling is indicated in the test case by setting <code>fallback</code> to <code>true</code>. The <code>pattern</code> for the test case must be set to <code>IK</code> and <code>init_remote_static</code> must be a different public key than the one corresponding to <code>resp_static</code>, to trigger the fallback (they would normally correspond for a successful <code>IK</code> handshake).</p>
+<p>The first message in the <code>messages</code> array is the initial <code>IK</code> handshake message from initiator to responder. The responder fails on this message and triggers fallback. The roles are reversed and the handshake restarts with the pattern set to <code>XXfallback</code>. The <code>init_remote_static</code> value is ignored when the handshake restarts and the <code>init_*</code> and <code>resp_*</code> fields are reversed in meaning.</p>
+<p>The initiator's semi-ephemeral public key is carried across from <code>IK</code> to <code>XXfallback</code>. This value does not explicitly appear in the test case as an <code>init_*</code> or <code>resp_*</code> field. It is assumed that the implementation will extract the value from the first <code>IK</code> handshake message and pass it to the <code>XXfallback</code> session.</p>
+<p>The second message in the <code>messages</code> array is the initial <code>XXfallback</code> handshake message from the former responder (now the initiator) back to the former initiator (now the responder).</p>
+<p>The remaining messages proceed as per a normal handshake followed by data transfer.</p>
+<p>If the fallback pattern name is not <code>XXfallback</code>, then the <code>fallback_pattern</code> key can be provided to specify an alternative pattern:</p>
+<pre><code>&quot;fallback&quot;: true
+&quot;fallback_pattern&quot;: &quot;XXfallback+hfs&quot;</code></pre>
+<h1 id="example">5. Example</h1>
+<p>Note: Long lines in the example below have been wrapped.</p>
+<div class="sourceCode"><pre class="sourceCode json"><code class="sourceCode json"><span class="fu">{</span>
+<span class="dt">&quot;vectors&quot;</span><span class="fu">:</span> <span class="ot">[</span>
+<span class="fu">{</span>
+<span class="dt">&quot;protocol_name&quot;</span><span class="fu">:</span> <span class="st">&quot;Noise_NN_25519_AESGCM_BLAKE2b&quot;</span><span class="fu">,</span>
+<span class="dt">&quot;init_prologue&quot;</span><span class="fu">:</span> <span class="st">&quot;4a6f686e2047616c74&quot;</span><span class="fu">,</span>
+<span class="dt">&quot;init_ephemeral&quot;</span><span class="fu">:</span> <span class="st">&quot;893e28b9dc6ca8d611ab664754b8ceb7bac5117349a4439a6b0569da977c464a&quot;</span><span class="fu">,</span>
+<span class="dt">&quot;resp_prologue&quot;</span><span class="fu">:</span> <span class="st">&quot;4a6f686e2047616c74&quot;</span><span class="fu">,</span>
+<span class="dt">&quot;resp_ephemeral&quot;</span><span class="fu">:</span> <span class="st">&quot;bbdb4cdbd309f1a1f2e1456967fe288cadd6f712d65dc7b7793d5e63da6b375b&quot;</span><span class="fu">,</span>
+<span class="dt">&quot;handshake_hash&quot;</span><span class="fu">:</span> <span class="st">&quot;67b154b6ecdb34fcb837863430a4705c46c1af6e4fbcf1c7f69b324e5b841aed</span>
+<span class="st">                   395246bb28fc184b94198ab33dfb9d3967c13c507879431a33d0d952dd1c7eea&quot;</span><span class="fu">,</span>
+<span class="dt">&quot;messages&quot;</span><span class="fu">:</span> <span class="ot">[</span>
+<span class="fu">{</span>
+<span class="dt">&quot;payload&quot;</span><span class="fu">:</span> <span class="st">&quot;4c756477696720766f6e204d69736573&quot;</span><span class="fu">,</span>
+<span class="dt">&quot;ciphertext&quot;</span><span class="fu">:</span> <span class="st">&quot;ca35def5ae56cec33dc2036731ab14896bc4c75dbb07a61f</span>
+<span class="st">               879f8e3afa4c79444c756477696720766f6e204d69736573&quot;</span>
+<span class="fu">}</span><span class="ot">,</span>
+<span class="fu">{</span>
+<span class="dt">&quot;payload&quot;</span><span class="fu">:</span> <span class="st">&quot;4d757272617920526f746862617264&quot;</span><span class="fu">,</span>
+<span class="dt">&quot;ciphertext&quot;</span><span class="fu">:</span> <span class="st">&quot;95ebc60d2b1fa672c1f46a8aa265ef51bfe38e7ccb39ec5be34069f14480884</span>
+<span class="st">               30b4b427c7ab9fac9f434513fa08726db51b1b447074227725c16a35f6b37c4&quot;</span>
+<span class="fu">}</span><span class="ot">,</span>
+<span class="fu">{</span>
+<span class="dt">&quot;payload&quot;</span><span class="fu">:</span> <span class="st">&quot;462e20412e20486179656b&quot;</span><span class="fu">,</span>
+<span class="dt">&quot;ciphertext&quot;</span><span class="fu">:</span> <span class="st">&quot;9d37117df3063b2dd15b76ab8feb70d1a863ed48809447faffba69&quot;</span>
+<span class="fu">}</span><span class="ot">,</span>
+<span class="fu">{</span>
+<span class="dt">&quot;payload&quot;</span><span class="fu">:</span> <span class="st">&quot;4361726c204d656e676572&quot;</span><span class="fu">,</span>
+<span class="dt">&quot;ciphertext&quot;</span><span class="fu">:</span> <span class="st">&quot;0637f52a8c2a4fc85335e3e54ff6f354c640a748db72134abc544a&quot;</span>
+<span class="fu">}</span><span class="ot">,</span>
+<span class="fu">{</span>
+<span class="dt">&quot;payload&quot;</span><span class="fu">:</span> <span class="st">&quot;4a65616e2d426170746973746520536179&quot;</span><span class="fu">,</span>
+<span class="dt">&quot;ciphertext&quot;</span><span class="fu">:</span> <span class="st">&quot;6d2a593b40932c40c700d71f5e4223e0ee4401e8682bc1e9c756523f34b2354fcb&quot;</span>
+<span class="fu">}</span><span class="ot">,</span>
+<span class="fu">{</span>
+<span class="dt">&quot;payload&quot;</span><span class="fu">:</span> <span class="st">&quot;457567656e2042f6686d20766f6e2042617765726b&quot;</span><span class="fu">,</span>
+<span class="dt">&quot;ciphertext&quot;</span><span class="fu">:</span> <span class="st">&quot;a5c747fe5132b92fc0819925ea2e2cf6ce10f</span>
+<span class="st">               d2c52fa8d25a4480c71fcd0d508a8c57adf54&quot;</span>
+<span class="fu">}</span>
+<span class="ot">]</span>
+<span class="fu">}</span>
+<span class="ot">]</span>
+<span class="fu">}</span></code></pre></div>
+<h1 id="ipr">6. IPR</h1>
+<p>This document is hereby placed in the public domain.</p>
+<h1 id="references" class="unnumbered">7. References</h1>
+<div id="refs" class="references">
+<div id="ref-vectorrationale">
+<p>[1] T. Perrin, “Test vector format.” 2017. <a href="https://moderncrypto.org/mail-archive/noise/2016/000505.html" class="uri">https://moderncrypto.org/mail-archive/noise/2016/000505.html</a></p>
+</div>
+</div>
+</body>
+</html>

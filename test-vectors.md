@@ -4,8 +4,8 @@ author:
   - Alex Wied (alex@centromere.net)
   - Rhys Weatherley (rhys.weatherley@gmail.com)
 revision:   '1'
-status:     'official/unstable'
-date:       '2017-11-15'
+status:     'unofficial/unstable'
+date:       '2017-11-21'
 link-citations: 'true'
 ---
 
@@ -33,7 +33,6 @@ Vectors are valid JSON and must be formatted exactly as follows:
 {
 "name": "<free form description of handshake>",
 "protocol_name": "<any valid handshake pattern name>",
-"hybrid": "25519|448|NewHope"
 "fail": false|true,
 "fallback": false|true,
 "fallback_pattern": "<any valid handshake pattern name>",
@@ -69,7 +68,6 @@ The following keys are optional:
   * `handshake_hash`
   * `fallback` (used for testing Noise Pipes, described below, defaults to `false`)
   * `fallback_pattern`
-  * `hybrid`
 
 Optional keys may be `null` or omitted entirely. The `fail` key, if omitted, defaults to `false` The
 `name` key, if omitted, defaults to `protocol_name`. The `init_psks` and `resp_psks` keys default to
@@ -124,10 +122,6 @@ specify an alternative pattern:
 "fallback": true
 "fallback_pattern": "XXfallback+hfs"
 ```
-
-## 4.2. Hybrid Forward Secrecy
-
-The `hybrid` key specifies the name of the algorithm to use for Hybrid Forward Secrecy.
 
 # 5. Example
 
